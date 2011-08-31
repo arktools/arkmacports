@@ -1,0 +1,26 @@
+port process
+
+fetch:		x download git repository (need to specify branch and/or switch to tar.gz)
+checksum:	  checksum (need checksums, only works on binary (not dir))
+extract: 	  default
+patch: 		  if I need to change CMakeLists.txt 
+configure: 	  mkdir build (?); chdir build; cmake ..
+build: 		  make -j8 
+test: 		  ? 
+destroot: 	  make install
+
+for arkcomm: 
+fetch:		x download tarball of specific branch
+checksum:	x calculate checksums
+extract: 	x must be run with sudo
+patch: 		? if I need to change CMakeLists.txt, probably also sudo
+configure: 	? mkdir build (?); chdir build; cmake ..
+TCL: 
+	cd ${worksrcpath}
+	file mkdir build
+	cd build
+	exec cmake ..
+
+build: 		  make -j8 
+test: 		  ? 
+destroot: 	  make install
