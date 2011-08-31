@@ -9,11 +9,21 @@ Author: Lenna X. Peterson (github.com/lennax)
 * arkscicos
 
 ```console
-./tree_test.py
+./gen_arktools.py
 ```
 
-### To modify deps or description: 
-
-modify dict in tree_test.py
-
+### User-definable variables: 
 Template: Portfile
+
+(all caps in gen_arktools.py)
+* dict 'ports' in tree_test.py
+** DEPS: port dependencies
+** DESCRIPT: port description
+** LONG_DESCR: long port description (wrap with "\ \n    ")
+* GIT_PATH: organization/owner on github (e.g. "arktools")
+* HOMEPAGE: project website
+* VERSION: project version
+* CATEGORY: port category (e.g. "science")
+
+* LOCAL_PORT_TREE: path to local port tree (e.g. "~/ports")
+* PORTFILE_PATH: path to template Portfile relative to gen_arktools.py

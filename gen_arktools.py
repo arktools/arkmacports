@@ -2,35 +2,35 @@
 
 ports = {
 	'arkcomm': {
-		'deps': [
+		'DEPS': [
 			"mavlink",
 		],
-		'descript': "Autonomous Robotics Kit communications library",
-		'long_descr': "ark (Autonomous Robotics Kit) Communications Library",
+		'DESCRIPT': "Autonomous Robotics Kit communications library",
+		'LONG_DESCR': "ark (Autonomous Robotics Kit) Communications Library",
 	},
 	'arkmath': {
-		'deps': [
+		'DEPS': [
 		],
-		'descript': "Autonomous Robotics Kit math library",
-		'long_descr': "ark (Autonomous Robotics Kit) Math Library",
+		'DESCRIPT': "Autonomous Robotics Kit math library",
+		'LONG_DESCR': "ark (Autonomous Robotics Kit) Math Library",
 	},
 	'arkosg': {
-		'deps': [
+		'DEPS': [
 			"boost",
 			"qt-4-mac",
 			"OpenSceneGraph-devel",
 		],
-		'descript': "Autonomous Robotics Kit, OpenSceneGraph library",
-		'long_descr': "ark (Autonomous Robotics Kit), OpenSceneGraph library",
+		'DESCRIPT': "Autonomous Robotics Kit, OpenSceneGraph library",
+		'LONG_DESCR': "ark (Autonomous Robotics Kit), OpenSceneGraph library",
 	},
 	'arkscicos': {
-		'deps': [
+		'DEPS': [
 			"arkcomm",
 			"arkmath",
 			"arkosg",
 		],
-		'descript': "Autonomous Robotics Kit, Scicoslab toolbox",
-		'long_descr': "ark (Autonomous Robotics Kit), Scicoslab Toolbox",
+		'DESCRIPT': "Autonomous Robotics Kit, Scicoslab toolbox",
+		'LONG_DESCR': "ark (Autonomous Robotics Kit), Scicoslab Toolbox",
 	},
 }
 
@@ -52,16 +52,16 @@ port_path = os.path.expanduser(LOCAL_PORT_TREE)
 base_path = os.getcwd()
 template_path = os.path.join(base_path, PORTFILE_PATH)
 
-#print ports['mavlink']['long_descr']
+#print ports['mavlink']['LONG_DESCR']
 for k in ports.keys():
 	print "Project '%s'" % k
 	
 	## Determine dependencies
 	dep_str = ""
-	if len(ports[k]['deps']) > 0:
-		for i, d in enumerate(ports[k]['deps']):
+	if len(ports[k]['DEPS']) > 0:
+		for i, d in enumerate(ports[k]['DEPS']):
 			dep_str += "port:"+d.rstrip() 		# whitespace causes failure
-			if i < len(ports[k]['deps'])-1: 
+			if i < len(ports[k]['DEPS'])-1: 
 				dep_str += " \\\n                  " # 18 spaces
 		print "deps: %s" % dep_str
 	
@@ -101,8 +101,8 @@ for k in ports.keys():
 	d = dict(
 		portname = k,
 		version = VERSION, 
-		descript = ports[k]['descript'], 
-		long_descr = ports[k]['long_descr'], 
+		descript = ports[k]['DESCRIPT'], 
+		long_descr = ports[k]['LONG_DESCR'], 
 		homepage = HOMEPAGE,
 		depends = dep_str,
 		master_site = url,
