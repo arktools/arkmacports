@@ -60,9 +60,9 @@ for k in ports.keys():
 	dep_str = ""
 	if len(ports[k]['deps']) > 0:
 		for i, d in enumerate(ports[k]['deps']):
-			dep_str += "port:"+d
+			dep_str += "port:"+d.rstrip() 		# whitespace causes failure
 			if i < len(ports[k]['deps'])-1: 
-				dep_str += " \ \n    "
+				dep_str += " \\\n                  " # 18 spaces
 		print "deps: %s" % dep_str
 	
 	## [Clone and] update source
@@ -99,7 +99,7 @@ for k in ports.keys():
 	## Create Portfile
 	### Create dict for Portfile Template
 	d = dict(
-		name = k,
+		portname = k,
 		version = VERSION, 
 		descript = ports[k]['descript'], 
 		long_descr = ports[k]['long_descr'], 
