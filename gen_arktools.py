@@ -1,10 +1,20 @@
 #!/usr/bin/python
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+# Author: Lenna X. Peterson (github.com/lennax)
+
+# TODO: 
+# Split settings into separate file
+# Allow specification of phase options
+# Parse version numbers, pull by tag
+
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+
 import os
 import subprocess
 import urllib
 from string import Template
 
-# SETTINGS #
+# SETTINGS # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 ## Port development paths ##
 LOCAL_PORT_TREE = "~/ports"
 PORTFILE_PATH = "Portfile" # relative to this script
@@ -55,7 +65,7 @@ ports = {
 	},
 }
 
-# MAIN PROGRAM #
+# MAIN PROGRAM # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 ## Store paths
 port_path = os.path.expanduser(LOCAL_PORT_TREE)
 base_path = os.getcwd()
