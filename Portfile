@@ -3,17 +3,16 @@
 PortSystem        1.0
 name              $portname
 version           $version
-categories        science education
-platforms         darwin
-license           GPL3
-maintainers       gmail.com:lennalenna \
-                  gmail.com:james.goppert
+categories        $category
+platforms         $platform
+license           $lic
+maintainers       $maint
 description       $descript
 long_description  $long_descr
 homepage          $homepage
 
-depends_build     port:cmake
-depends_lib       $depends
+depends_build     $build_depends
+depends_lib       $lib_depends
 
 master_sites      $master_site
 distname          $filename

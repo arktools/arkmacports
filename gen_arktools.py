@@ -1,5 +1,26 @@
 #!/usr/bin/python
+import os
+import subprocess
+import urllib
+from string import Template
 
+# SETTINGS #
+## Port development paths ##
+LOCAL_PORT_TREE = "~/ports"
+PORTFILE_PATH = "Portfile" # relative to this script
+
+## Project settings ##
+GIT_PATH = "arktools"
+HOMEPAGE = "http://arktools.github.com"
+# Replace with something accurate later
+VERSION = "0.0.0"
+CATEGORY = "science"
+PLATFORM = "darwin"
+LICENSE = "GPL-3"
+MAINTAINERS = "gmail.com:arklenna \\\n                  gmail.com:james.goppert"
+BUILD = "cmake"
+
+## Project member settings ##
 ports = {
 	'arkcomm': {
 		'DEPS': [
@@ -34,25 +55,12 @@ ports = {
 	},
 }
 
-GIT_PATH = "arktools"
-HOMEPAGE = "http://arktools.github.com"
-# Replace with something accurate later
-VERSION = "0.0.0"
-CATEGORY = "science"
-
-import os
-import subprocess
-import urllib
-from string import Template
-
-## Store paths (change local_port_tree if necessary)
-LOCAL_PORT_TREE = "~/ports"
-PORTFILE_PATH = "Portfile" # relative to this script
+# MAIN PROGRAM #
+## Store paths
 port_path = os.path.expanduser(LOCAL_PORT_TREE)
 base_path = os.getcwd()
 template_path = os.path.join(base_path, PORTFILE_PATH)
 
-#print ports['mavlink']['LONG_DESCR']
 for k in ports.keys():
 	print "Project '%s'" % k
 	
@@ -67,10 +75,9 @@ for k in ports.keys():
 	
 	## [Clone and] update source
 	if os.path.exists(k) == False:
-		print "Cloning project '%s':" % k
-		cmd = "git clone git@github.com:%s/%s.git" % (GIT_PATH, k)
-		print cmd
-		subprocess.check_call(cmd, shell=True)
+		print "Cloning project '%s'..." % k
+		git_file = "git@github.com:%s/%s.git" % (GIT_PATH, k)
+		subprocess.check_call(["git", "clone", git_file])
 	os.chdir(k)
 	### Update source
 	subprocess.check_call(["git", "pull"])
@@ -82,7 +89,8 @@ for k in ports.keys():
 	## Determine checksums
 	### Download file
 	url = "http://github.com/%s/%s/tarball/%s" % ( GIT_PATH, k, commit )
-	filename = "%s/%s-%s-%s.tar.gz" % ( base_path, GIT_PATH, k, short_unique )
+	barefile = "%s-%s-%s.tar.gz" % ( GIT_PATH, k, short_unique )
+	filename = os.path.join( base_path, barefile )
 	if os.path.exists(filename) == False:
 		urllib.urlretrieve(url, filename)
 	### Calculate checksums
@@ -93,20 +101,22 @@ for k in ports.keys():
 	rmd160_str = subprocess.Popen(["openssl", "rmd160", filename], stdout=subprocess.PIPE).communicate()[0]
 	rmd160 = rmd160_str.rstrip().split(' ')[-1]
 	
-	### Filename for Portfile
-	filename = "%s-${name}-%s" % (GIT_PATH, short_unique)
-	
 	## Create Portfile
 	### Create dict for Portfile Template
 	d = dict(
 		portname = k,
 		version = VERSION, 
+		category = CATEGORY,
+		platform = PLATFORM, 
+		lic = LICENSE, 
+		maint = MAINTAINERS, 
 		descript = ports[k]['DESCRIPT'], 
 		long_descr = ports[k]['LONG_DESCR'], 
 		homepage = HOMEPAGE,
-		depends = dep_str,
+		build_depends = "port:"+BUILD, 
+		lib_depends = dep_str,
 		master_site = url,
-		filename = filename,
+		filename = "%s-${name}-%s" % (GIT_PATH, short_unique),
 		md5 = md5, 
 		sha1 = sha1, 
 		rmd160 = rmd160
@@ -121,8 +131,6 @@ for k in ports.keys():
 	out.close()
 	
 	## Copy Portfile to local port tree
-	### if this script is in ports/arkmacports/
-	### the current directory is ports/arkmacports/$k
 	copy_path = os.path.join( port_path, CATEGORY, k )
 	print copy_path
 	if os.path.exists(copy_path) == False:
@@ -132,8 +140,6 @@ for k in ports.keys():
 	## Return to original directory
 	os.chdir(base_path)
 
-## Run portindex
+## Run portindex to verify Portfile syntax
 os.chdir(port_path)
 subprocess.check_call(["portindex"])
-
-	
