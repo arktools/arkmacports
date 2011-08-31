@@ -1,0 +1,19 @@
+Macports Portfile generator for arktools
+=============
+Author: Lenna X. Peterson (github.com/lennax)
+
+### To generate Portfiles for: 
+* arkcomm
+* arkmath
+* arkosg
+* arkscicos
+
+```console
+./tree_test.py
+```
+
+### To modify deps or description: 
+
+modify dict in tree_test.py
+
+Template: Portfile
