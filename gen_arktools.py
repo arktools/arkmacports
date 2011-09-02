@@ -34,7 +34,7 @@ BUILD = "cmake"
 ports = {
 	'arkcomm': {
 		'DEPS': [
-			"mavlink",
+#			"mavlink",
 		],
 		'DESCRIPT': "Autonomous Robotics Kit communications library",
 		'LONG_DESCR': "ark (Autonomous Robotics Kit) Communications Library",
@@ -48,8 +48,8 @@ ports = {
 	'arkosg': {
 		'DEPS': [
 			"boost",
-			"qt-4-mac",
-			"OpenSceneGraph-devel",
+			"qt4-mac-devel",
+			"OpenSceneGraph",
 		],
 		'DESCRIPT': "Autonomous Robotics Kit, OpenSceneGraph library",
 		'LONG_DESCR': "ark (Autonomous Robotics Kit), OpenSceneGraph library",
