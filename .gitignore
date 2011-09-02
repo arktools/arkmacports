@@ -2,3 +2,4 @@ ark*/
 mavlink/
 *.tar.gz
 lenna
+BUILD*
