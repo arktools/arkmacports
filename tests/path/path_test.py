@@ -1,67 +1,64 @@
 #!/usr/bin/python
+# Author: Lenna X. Peterson (github.com/lennax)
+# Determines appropriate path for CMake
+#  Looks for "CMakeLists.txt" and "src/"
+#   ( BUILDFILE and SRCDIR in find_build_dir() )
+#  Searches the following paths:
+#   1 Path of call
+#   2 Path where script is located
+#   3 Path above 2 (parent directory)
+#   4 Path above 3 (grandparent directory)
 
-import sys
-import os
-import subprocess
+import os # for getcwd(), os.path
 
-#print "argv[0]: " + sys.argv[0]
-#print "getcwd: " + os.getcwd()
-path = os.path.abspath(__file__)
-#print "__file__ path: " + path
-script_dir = os.path.dirname(os.path.abspath(__file__))
-#print "base: " + script_dir
-# subprocess.check_call(["touch", "CWDTEST"])
-call_dir = os.getcwd()
-#tree = os.walk(call_dir)
-#for root, dirs, files in os.walk(call_dir):
-	#for name in files: 
-	#for name in dirs:
+def get_build_path():
+
+	build_dir=""
+
+	## Initialize search paths
+	call_dir = os.getcwd()
+	script_dir = os.path.dirname(os.path.abspath(__file__))
+	script_mom = os.path.abspath(script_dir+"/..")
+	script_grandma = os.path.abspath(script_mom+"/..")
+	if script_mom == call_dir:
+		script_mom = ""
+	if script_grandma == call_dir:
+		script_grandma = ""
+
+	## Define function to search for required components for build
+	def find_build_dir(search_dir):
+		BUILDFILE = "CMakeLists.txt"
+		SRCDIR = "src"
+		os.chdir(search_dir)
+		if os.path.isfile(BUILDFILE) and os.path.isdir(SRCDIR):
+			print "buildfile and srcdir found in '%s'" % search_dir
+			build_dir = search_dir
+			return build_dir
+		return False
+
+	## Class to emulate if temp = x 
+	#      (checking equality of x while assigning it to temp)
+	#      Borrowed from Alex Martelli
+	class Holder(object):
+		def set(self, value):
+			self.value = value
+			return value
+		def get(self):
+			return self.value
+
+	temp = Holder()
+
+	## Search paths for build components
+	if temp.set(find_build_dir(call_dir)): 
+		build_dir = temp.get()
+	elif temp.set(find_build_dir(script_dir)): 
+		build_dir = temp.get()
+	elif script_mom and temp.set(find_build_dir(script_mom)): 
+		build_dir = temp.get()
+	elif script_grandma and temp.set(find_build_dir(script_grandma)):
+		build_dir = temp.get()
+	else: 
+		raise OSError("No valid build directory was found")
+		return 0
 	
-#for i in tree: 
-	#print i
-	#break
-
-build_dir=""
-script_mom = os.path.abspath(script_dir+"/..")
-script_grandma = os.path.abspath(script_mom+"/..")
-if script_mom == call_dir:
-	script_mom = ""
-if script_grandma == call_dir:
-	script_grandma = ""
-# print "mom: %s" % script_mom
-# print "grandma: %s" % script_grandma
-
-def find_build_dir(search_dir):
-#	buildfile = "CMakeLists.txt"
-#	srcdir = "src"
-	buildfile = "BUILDFILE"
-	srcdir = "BUILDDIR"
-	os.chdir(search_dir)
-	if os.path.isfile(buildfile) and os.path.isdir(srcdir):
-		print "buildfile and srcdir found in '%s'" % search_dir
-		build_dir = search_dir
-		return build_dir
-	return False
-
-# Class to emulate if temp = x (checking equality of x while assigning it to temp)
-# Borrowed from Alex Martelli
-class Holder(object):
-	def set(self, value):
-		self.value = value
-		return value
-	def get(self):
-		return self.value
-
-temp = Holder()
-
-
-if temp.set(find_build_dir(call_dir)): 
-	build_dir = temp.get()
-elif temp.set(find_build_dir(script_dir)): 
-	build_dir = temp.get()
-elif script_mom and temp.set(find_build_dir(script_mom)): 
-	build_dir = temp.get()
-elif script_grandma and temp.set(find_build_dir(script_grandma)):
-	build_dir = temp.get()
-else: 
-	print "Could not find a valid build directory"
+	return build_dir
